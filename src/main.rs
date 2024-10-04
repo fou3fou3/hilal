@@ -1,6 +1,33 @@
 use std::path::Path;
+use std::process::Command;
 use std::time::Duration;
 use std::{env, thread};
+
+fn shutdown_system() {
+    #[cfg(target_os = "windows")]
+    {
+        Command::new("shutdown")
+            .args(["/s", "/t", "0"])
+            .output()
+            .unwrap();
+    }
+
+    #[cfg(target_os = "linux")]
+    {
+        Command::new("shutdown")
+            .args(["-h", "now"])
+            .output()
+            .unwrap();
+    }
+
+    #[cfg(target_os = "macos")]
+    {
+        Command::new("shutdown")
+            .args(["-h", "now"])
+            .output()
+            .unwrap();
+    }
+}
 
 fn main() {
     let args: Vec<_> = env::args().collect();
@@ -26,5 +53,5 @@ fn main() {
         thread::sleep(file_checking_rate);
     }
 
-    println!("hey there its")
+    shutdown_system();
 }
